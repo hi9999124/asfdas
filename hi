@@ -1,0 +1,440 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+local Window = Rayfield:CreateWindow({
+   Name = "pwned by 14:00 script",
+   Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
+   LoadingTitle = "Rayfield Interface Suite",
+   LoadingSubtitle = "by Abobus_100k",
+   Theme = "Default", -- Check https://docs.sirius.menu/rayfield/configuration/themes
+
+   DisableRayfieldPrompts = false,
+   DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
+
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = pwnedby, -- Create a custom folder for your hub/game
+      FileName = "Smol Hub"
+   },
+
+   Discord = {
+      Enabled = false, -- Prompt the user to join your Discord server if their executor supports it
+      Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
+      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+   },
+
+   KeySystem = false, -- Set this to true to use our key system
+   KeySettings = {
+      Title = "Untitled",
+      Subtitle = "Key System",
+      Note = "No method of obtaining the key is provided", -- Use this to tell the user how to get a key
+      FileName = "Key", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
+      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+      Key = {"Hello"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+   }
+})
+
+
+Rayfield:Notify({
+   Title = "wassup!",
+   Content = "never be skid",
+   Duration = 6.5,
+   Image = 4483362458,
+})
+
+local Tab = Window:CreateTab("Esp", 4483362458) -- Title, Image
+
+local Button = Tab:CreateButton({
+   Name = "Esp yall",
+   Callback = function()
+local function applyHighlights(model)
+    if not model:IsA("Model") then return end
+    
+    local valuesFolder = model:FindFirstChild("Values")
+    if valuesFolder then
+        -- Check all PlayerRole values in Values folder
+        for _, roleValue in pairs(valuesFolder:GetChildren()) do
+            if roleValue:IsA("StringValue") and roleValue.Name == "PlayerRole" then
+                if roleValue.Value == "Survivor" then
+                    -- Apply green highlight if not already present
+                    local hasGreenHighlight = false
+                    for _, highlight in pairs(model:GetChildren()) do
+                        if highlight:IsA("Highlight") and highlight.FillColor == Color3.fromRGB(0, 255, 0) then
+                            hasGreenHighlight = true
+                            break
+                        end
+                    end
+                    if not hasGreenHighlight then
+                        local highlight = Instance.new("Highlight")
+                        highlight.FillColor = Color3.fromRGB(0, 255, 0) -- Green
+                        highlight.OutlineColor = Color3.fromRGB(0, 255, 0)
+                        highlight.FillTransparency = 0.5
+                        highlight.OutlineTransparency = 0
+                        highlight.Adornee = model
+                        highlight.Parent = model
+                    end
+                elseif roleValue.Value == "Entity" then
+                    -- Apply red highlight if not already present
+                    local hasRedHighlight = false
+                    for _, highlight in pairs(model:GetChildren()) do
+                        if highlight:IsA("Highlight") and highlight.FillColor == Color3.fromRGB(255, 0, 0) then
+                            hasRedHighlight = true
+                            break
+                        end
+                    end
+                    if not hasRedHighlight then
+                        local highlight = Instance.new("Highlight")
+                        highlight.FillColor = Color3.fromRGB(255, 0, 0) -- Red
+                        highlight.OutlineColor = Color3.fromRGB(255, 0, 0)
+                        highlight.FillTransparency = 0.5
+                        highlight.OutlineTransparency = 0
+                        highlight.Adornee = model
+                        highlight.Parent = model
+                    end
+                end
+            end
+        end
+    end
+end
+
+-- Apply highlights to existing models
+local livingFolder = game.Workspace:WaitForChild("Living")
+for _, model in pairs(livingFolder:GetChildren()) do
+    applyHighlights(model)
+end
+
+-- Apply highlights to new models
+livingFolder.ChildAdded:Connect(applyHighlights)
+   -- The function that takes place when the button is pressed
+   end,
+})
+
+local Tab = Window:CreateTab("misc", 4483362458) -- Title, Image
+
+local Button = Tab:CreateButton({
+   Name = "smart aimbot!",
+   Callback = function()
+       local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+
+local LocalPlayer = Players.LocalPlayer
+local Character = LocalPlayer.Character
+local HumanoidRootPart = Character and Character:FindFirstChild("HumanoidRootPart")
+
+-- Aimbot state
+local aimbotEnabled = false
+local aimbotConnection = nil
+local keybind = Enum.KeyCode.E -- Default keybind
+
+-- Create GUI
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "AimbotGUI"
+ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.ResetOnSpawn = false
+
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0, 200, 0, 150)
+MainFrame.Position = UDim2.new(0.5, -100, 0.5, -75)
+MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+MainFrame.BorderSizePixel = 0
+MainFrame.Parent = ScreenGui
+
+local TitleBar = Instance.new("Frame")
+TitleBar.Size = UDim2.new(1, 0, 0, 30)
+TitleBar.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+TitleBar.BorderSizePixel = 0
+TitleBar.Parent = MainFrame
+
+local TitleLabel = Instance.new("TextLabel")
+TitleLabel.Size = UDim2.new(0.7, 0, 1, 0)
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Text = "Aimbot Control"
+TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TitleLabel.TextScaled = true
+TitleLabel.Parent = TitleBar
+
+local MinimizeButton = Instance.new("TextButton")
+MinimizeButton.Size = UDim2.new(0, 30, 0, 30)
+MinimizeButton.Position = UDim2.new(1, -30, 0, 0)
+MinimizeButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+MinimizeButton.Text = "-"
+MinimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+MinimizeButton.TextScaled = true
+MinimizeButton.Parent = TitleBar
+
+local ContentFrame = Instance.new("Frame")
+ContentFrame.Size = UDim2.new(1, 0, 1, -30)
+ContentFrame.Position = UDim2.new(0, 0, 0, 30)
+ContentFrame.BackgroundTransparency = 1
+ContentFrame.Parent = MainFrame
+
+local KeybindLabel = Instance.new("TextLabel")
+KeybindLabel.Size = UDim2.new(1, -10, 0, 20)
+KeybindLabel.Position = UDim2.new(0, 5, 0, 5)
+KeybindLabel.BackgroundTransparency = 1
+KeybindLabel.Text = "Keybind: " .. keybind.Name
+KeybindLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+KeybindLabel.TextScaled = true
+KeybindLabel.TextXAlignment = Enum.TextXAlignment.Left
+KeybindLabel.Parent = ContentFrame
+
+local KeybindButton = Instance.new("TextButton")
+KeybindButton.Size = UDim2.new(0, 80, 0, 20)
+KeybindButton.Position = UDim2.new(1, -85, 0, 5)
+KeybindButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+KeybindButton.Text = "Set Keybind"
+KeybindButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+KeybindButton.TextScaled = true
+KeybindButton.Parent = ContentFrame
+
+local ToggleButton = Instance.new("TextButton")
+ToggleButton.Size = UDim2.new(1, -10, 0, 30)
+ToggleButton.Position = UDim2.new(0, 5, 0, 30)
+ToggleButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+ToggleButton.Text = "Enable Aimbot"
+ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ToggleButton.TextScaled = true
+ToggleButton.Parent = ContentFrame
+
+local DestroyButton = Instance.new("TextButton")
+DestroyButton.Size = UDim2.new(1, -10, 0, 30)
+DestroyButton.Position = UDim2.new(0, 5, 0, 65)
+DestroyButton.BackgroundColor3 = Color3.fromRGB(100, 0, 0)
+DestroyButton.Text = "Destroy Aimbot"
+DestroyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+DestroyButton.TextScaled = true
+DestroyButton.Parent = ContentFrame
+
+-- Make GUI draggable
+local dragging = false
+local dragStart = nil
+local startPos = nil
+
+TitleBar.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = MainFrame.Position
+    end
+end)
+
+TitleBar.InputChanged:Connect(function(input)
+    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+        local delta = input.Position - dragStart
+        MainFrame.Position = UDim2.new(
+            startPos.X.Scale,
+            startPos.X.Offset + delta.X,
+            startPos.Y.Scale,
+            startPos.Y.Offset + delta.Y
+        )
+    end
+end)
+
+TitleBar.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = false
+    end
+end)
+
+-- Minimize functionality
+local minimized = false
+MinimizeButton.MouseButton1Click:Connect(function()
+    minimized = not minimized
+    ContentFrame.Visible = not minimized
+    MainFrame.Size = minimized and UDim2.new(0, 200, 0, 30) or UDim2.new(0, 200, 0, 150)
+    MinimizeButton.Text = minimized and "+" or "-"
+end)
+
+-- Aimbot functions
+local function findNearestCharacter()
+    if not Character or not HumanoidRootPart then return nil end
+    
+    local nearestCharacter = nil
+    local nearestDistance = math.huge
+    local myPosition = HumanoidRootPart.Position
+    
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Character then
+            local targetRoot = player.Character:FindFirstChild("HumanoidRootPart")
+            if targetRoot then
+                local distance = (myPosition - targetRoot.Position).Magnitude
+                if distance < nearestDistance then
+                    nearestDistance = distance
+                    nearestCharacter = player.Character
+                end
+            end
+        end
+    end
+    
+    return nearestCharacter
+end
+
+local function rotateToTarget(targetCharacter)
+    if not Character or not HumanoidRootPart or not targetCharacter then return end
+    
+    local targetRoot = targetCharacter:FindFirstChild("HumanoidRootPart")
+    if not targetRoot then return end
+    
+    local myPosition = HumanoidRootPart.Position
+    local targetPosition = targetRoot.Position
+    local direction = (targetPosition - myPosition).Unit
+    
+    local lookAtCFrame = CFrame.new(Vector3.new(0, 0, 0), Vector3.new(direction.X, 0, direction.Z))
+    HumanoidRootPart.CFrame = CFrame.new(HumanoidRootPart.Position) * lookAtCFrame
+end
+
+local function startAimbot()
+    if aimbotConnection then return end
+    aimbotConnection = RunService.RenderStepped:Connect(function()
+        if not aimbotEnabled or not Character or not HumanoidRootPart then
+            if aimbotConnection then
+                aimbotConnection:Disconnect()
+                aimbotConnection = nil
+            end
+            return
+        end
+        local nearestCharacter = findNearestCharacter()
+        if nearestCharacter then
+            rotateToTarget(nearestCharacter)
+        end
+    end)
+end
+
+local function stopAimbot()
+    aimbotEnabled = false
+    ToggleButton.Text = "Enable Aimbot"
+    ToggleButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+    if aimbotConnection then
+        aimbotConnection:Disconnect()
+        aimbotConnection = nil
+    end
+end
+
+-- Toggle aimbot
+local function toggleAimbot()
+    aimbotEnabled = not aimbotEnabled
+    ToggleButton.Text = aimbotEnabled and "Disable Aimbot" or "Enable Aimbot"
+    ToggleButton.BackgroundColor3 = aimbotEnabled and Color3.fromRGB(0, 100, 0) or Color3.fromRGB(70, 70, 70)
+    if aimbotEnabled then
+        startAimbot()
+    else
+        stopAimbot()
+    end
+end
+
+-- Keybind setting
+local settingKeybind = false
+KeybindButton.MouseButton1Click:Connect(function()
+    settingKeybind = true
+    KeybindButton.Text = "Press a key..."
+end)
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if settingKeybind and input.UserInputType == Enum.UserInputType.Keyboard then
+        keybind = input.KeyCode
+        KeybindLabel.Text = "Keybind: " .. keybind.Name
+        KeybindButton.Text = "Set Keybind"
+        settingKeybind = false
+    elseif not gameProcessed and input.KeyCode == keybind then
+        toggleAimbot()
+    end
+end)
+
+-- Toggle button
+ToggleButton.MouseButton1Click:Connect(toggleAimbot)
+
+-- Destroy button
+DestroyButton.MouseButton1Click:Connect(function()
+    stopAimbot()
+    ScreenGui:Destroy()
+end)
+
+-- Handle character reset
+LocalPlayer.CharacterAdded:Connect(function(newCharacter)
+    stopAimbot()
+    Character = newCharacter
+    HumanoidRootPart = newCharacter:WaitForChild("HumanoidRootPart")
+end)
+   -- The function that takes place when the button is pressed
+   end,
+})
+
+
+local Button = Tab:CreateButton({
+   Name = "play lms",
+   Callback = function()
+       -- LocalScript
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+-- Function to stop all sounds
+local function stopAllSounds()
+    for _, sound in pairs(game:GetDescendants()) do
+        if sound:IsA("Sound") and sound.IsPlaying then
+            sound:Stop()
+        end
+    end
+end
+
+-- Get the specific sound
+local targetSound = ReplicatedStorage:WaitForChild("Assets"):WaitForChild("LastManStanding"):WaitForChild("Generic"):WaitForChild("Sound")
+
+-- Stop all sounds and play the target sound
+stopAllSounds()
+targetSound:Play()
+   -- The function that takes place when the button is pressed
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Silence..",
+   Callback = function()
+   local function stopAllSounds()
+    for _, sound in pairs(game:GetDescendants()) do
+        if sound:IsA("Sound") and sound.IsPlaying then
+            sound:Stop()
+        end
+    end
+end
+
+-- Stop all sounds and play the target sound
+stopAllSounds()
+end,
+})
+
+
+local Button = Tab:CreateButton({
+   Name = "stamina hacks! >xD (inf stamina)",
+   Callback = function()
+       -- LocalScript in StarterPlayerScripts
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+-- Function to set StaminaDrainageMultiplier
+local function setStaminaDrainage(character)
+    local livingFolder = workspace:WaitForChild("Living")
+    local playerFolder = livingFolder:WaitForChild(player.Name)
+    
+    local valuesFolder = playerFolder:WaitForChild("Values")
+    local speedFolder = valuesFolder:WaitForChild("Speed")
+    local staminaDrainage = speedFolder:WaitForChild("StaminaDrainageMultiplier")
+    
+    staminaDrainage.Value = 0
+end
+
+-- Handle character spawning
+local function onCharacterAdded(character)
+    setStaminaDrainage(character)
+end
+
+-- Connect character added event
+player.CharacterAdded:Connect(onCharacterAdded)
+
+-- Handle initial spawn
+if player.Character then
+    setStaminaDrainage(player.Character)
+end
+   -- The function that takes place when the button is pressed
+   end,
+})
